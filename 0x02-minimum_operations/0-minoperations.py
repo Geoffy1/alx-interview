@@ -1,27 +1,27 @@
 #!/usr/bin/python3
-'''Creates the minimum operations
+'''Create the min operations
 '''
 
 
 def minOperations(n):
-    '''Computes the fewest no of operations needed to result
-    in exact n H characters.
+    '''Computes the fewest number of operations needed to result
+    in n H characters.
     '''
-    if n == 1:
+    if not isinstance(n, int):
         return 0
-    
-    operations = 0
-    copied = 1
-    
-    while copied < n:
-        if n % copied == 0:
-            operations += 1
-            copied *= n // copied
-        else:
-            operations += 1
-            copied += copied
-    
-    if copied == n:
-        return operations
-    else:
-        return 0
+    num_ops = 0
+    copy = 0
+    paste = 1
+    while paste < n:
+        if copy == 0:
+            copy = paste
+            paste += copy
+            num_ops += 2
+        elif n - paste > 0 and (n - paste) % paste == 0:
+            copy = paste
+            paste += copy
+            num_ops += 2
+        elif copy > 0:
+            paste += copy
+            num_ops += 1
+    return num_ops
