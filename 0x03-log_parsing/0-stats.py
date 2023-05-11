@@ -1,35 +1,48 @@
 #!/usr/bin/env python3
+"""reads stdin line by line and computes metrics
+"""
 
 import sys
-from collections import defaultdict
 
-total_file_size = 0
-status_code_counts = defaultdict(int)
-line_count = 0
+
+status_codes_dict = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
+                     '404': 0, '405': 0, '500': 0}
+
+total_size = 0
+count = 0  # keep count of the number lines counted
 
 try:
     for line in sys.stdin:
-        try:
-            parts = line.split()
-            ip_address = parts[0]
-            date = parts[3].strip('[]')
-            request = parts[5]
-            status_code = int(parts[6])
-            file_size = int(parts[7])
-        except:
-            # If the line doesn't match the expected format, skip it
-            continue
-        
-        total_file_size += file_size
-        status_code_counts[status_code] += 1
-        line_count += 1
-        
-        if line_count % 10 == 0:
-            print(f"File size: {total_file_size}")
-            for code in sorted(status_code_counts.keys()):
-                print(f"{code}: {status_code_counts[code]}")
-        
-except KeyboardInterrupt:
-    print(f"File size: {total_file_size}")
-    for code in sorted(status_code_counts.keys()):
-        print(f"{code}: {status_code_counts[code]}")
+        line_list = line.split(" ")
+
+        if len(line_list) > 4:
+            status_code = line_list[-2]
+            file_size = int(line_list[-1])
+
+
+            if status_code in status_codes_dict.keys():
+                status_codes_dict[status_code] += 1
+
+
+            total_size += file_size
+
+
+            count += 1
+
+        if count == 10:
+            count = 0  # reset count
+            print('File size: {}'.format(total_size))
+
+
+            for key, value in sorted(status_codes_dict.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
+
+except Exception as err:
+    pass
+
+finally:
+    print('File size: {}'.format(total_size))
+    for key, value in sorted(status_codes_dict.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
