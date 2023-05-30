@@ -1,38 +1,24 @@
 #!/usr/bin/python3
-"""UTF-8 Validation"""
+"""UTF-8 Validation""
 
 def validUTF8(data):
-    # Helper function
-    def isValidByte(byte):
-        return byte & 0x80 == 0 or byte & 0xC0 == 0xC0
+    expected_continuation_bytes = 0
 
-    # Iterate through the data
-    i = 0
-    while i < len(data):
-        # Get the current byte
-        byte = data[i]
-
-        # If the byte is a single-byte char, move to the next
-        if isValidByte(byte):
-            i += 1
-            continue
-
-        # Get the num of bytes in the char
-        if byte & 0xE0 == 0xC0:
-            num_bytes = 2
-        elif byte & 0xF0 == 0xE0:
-            num_bytes = 3
-        elif byte & 0xF8 == 0xF0:
-            num_bytes = 4
-        else:
-            return False
-
-        # Check that the remaining bytes exist and are okay
-        for j in range(i + 1, i + num_bytes):
-            if j >= len(data) or not isValidByte(data[j]):
+    for byte in data:
+        if expected_continuation_bytes == 0:
+            if byte & 0x80 == 0:
+                continue
+            if byte & 0xE0 == 0xC0:
+                expected_continuation_bytes = 1
+            elif byte & 0xF0 == 0xE0:
+                expected_continuation_bytes = 2
+            elif byte & 0xF8 == 0xF0:
+                expected_continuation_bytes = 3
+            else:
                 return False
+        else:
+            if byte & 0xC0 != 0x80:
+                return False
+            expected_continuation_bytes -= 1
 
-        # Move to the next char
-        i += num_bytes
-
-    return True
+    return expected_continuation_bytes == 0
