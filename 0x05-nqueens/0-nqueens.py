@@ -5,10 +5,10 @@ import sys
 
 
 solutions = []
-"""The list of possible solns to the N queens prob.
+"""The list of possible solutions to the N queens prob.
 """
 n = 0
-"""The size of the chess.
+"""The size of the chessboard.
 """
 pos = None
 """The list of possible positions on the chessboard.
@@ -36,7 +36,7 @@ def get_input():
 
 
 def is_attacking(pos0, pos1):
-    """Checks if the positions of 2 queens are in an attkng mode.
+    """Checks if the positions of 2 queens are in an attacking mode.
     Args:
         pos0 (list or tuple): The first queen's position.
         pos1 (list or tuple): The second queen's position.
@@ -49,7 +49,7 @@ def is_attacking(pos0, pos1):
 
 
 def build_solution(row, group):
-    """Builds a soln for the n queens prob.
+    """Builds a solution for the n queens prob.
     Args:
         row (int): The current row in the chessboard.
         group (list of lists of integers): The group of valid positions.
@@ -69,7 +69,7 @@ def build_solution(row, group):
 
 
 def get_solutions():
-    """Gets the soln for the given chessboard size.
+    """Gets the solution for the given chessboard size.
     """
     global pos, n
     pos = [[x // n, x % n] for x in range(n ** 2)]
