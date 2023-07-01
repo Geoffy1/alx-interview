@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Module that solves prime game question """
 
+
 def isWinner(x, nums):
     """fnctn that checks for the winner"""
     if not nums or x < 1:
